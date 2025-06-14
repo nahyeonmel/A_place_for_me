@@ -30,12 +30,9 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-
         #portfolio {
             text-align: center;
         }
-
-
 
         .gallery {
             display: flex;
@@ -110,14 +107,12 @@
         <h1>김나현의 포트폴리오</h1>
         <p>쉽게 배우는 AI활용콘텐츠 제작 강의</p>
     </header>
-ㄴ
+
     <section id="about">
         <h2>About Me</h2>
         <div style="display: flex; align-items: center;">
-            
             <img src="contents/img/김나현.png"
             alt="Your Photo" style="max-width: 40%;">
-
             <div style="flex: 1; margin-left: 20px;">
                 <p style="max-width: 100%;">
                     안녕하세요, 제 포트폴리오에 오신 것을 환영합니다. 저의 과는 영상디자인과이지만 고등학교때 잠깐 프로그래밍을 배운적이 있어 재미있게 했습니다.
@@ -127,7 +122,6 @@
         </div>
     </section>
     
-   
     <article id="portfolio_webgame">
         <canvas id="myCanvas" width="600" height="400"></canvas>
         <div id="start_menu">
@@ -152,10 +146,10 @@
             width: 60,
             height: 100,
             speed: 5,
-            life: 3,
+            life: 5,
             G_y: 0,
             m_left: false,
-            m_rigth: false 
+            m_right: false 
         };
         
         var gravity  = 0.4;
@@ -167,18 +161,9 @@
         var MoveSound = document.querySelector("#moveSound");
         var DestroySound = document.querySelector("#destroySound");
 
-
         backgroundImage.src = 'contents/img/background_mygame.png';
         playerImage.src = 'contents/img/player.png'; 
-        d_object.src = 'contents/img/d_object.png':       
-
-        backgroundImage.onload = function() {
-            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-        };       
-        playerImage.onload = function() {
-            ctx.drawImage(playerImage, player.x, player.y, 
-            player.width, player.height);
-        };
+        d_object.src = 'contents/img/d_object.png';       
 
         backgroundImage.onload = draw;
         playerImage.onload = draw;
@@ -190,8 +175,8 @@
             ctx.drawImage(playerImage, player.x, 
             player.y, player.width, player.height);
             fallingObjects.forEach(function(object) {
-             ctx.drawImage(d_object, object.x, 
-             object.y, object.width, object.height); 
+                ctx.drawImage(d_object, object.x, 
+                object.y, object.width, object.height); 
             });
 
             ctx.fillStyle = 'white';
@@ -201,6 +186,16 @@
             ctx.fillStyle = 'white';
             ctx.font = '20px Arial';
             ctx.fillText(`LIFE: ${player.life}`, 10, 40);
+
+            // 생명이 0이 되면 즉시 게임 종료
+            if(player.life <= 0 && gameRunning){
+                gameRunning = false;
+                BGmusic.pause();
+                BGmusic.currentTime = 0;
+                document.querySelector("#start_menu").style.display = 'flex';                
+                document.querySelector("#start_menu h1").innerHTML
+                = "POINT : "+Math.floor(PlayTime / 1000);
+            }
         }
 
         function update(){
@@ -218,7 +213,7 @@
             if (player.m_left && player.x > 0){
                 player.x -= player.speed;
             }
-            if (player.m_rigth && player.x + player.width < canvas.width){
+            if (player.m_right && player.x + player.width < canvas.width){
                 player.x += player.speed;
             }
 
@@ -232,17 +227,10 @@
                         player.life -= 1;
                         DestroySound.play();
                         object.y = canvas.height + 100; 
-                        if(player.life == 0){
-                            gameRunning = false;
-                            BGmusic.pause();
-                            BGmusic.currentTime = 0;
-                        }
-
                 }
             });
 
             PlayTime = Date.now() - startTime;
-            
             draw();
         }  
 
@@ -255,7 +243,7 @@
                 walking_sound();                        
             }
             if (e.key === 'ArrowRight') {
-                player.m_rigth = true;
+                player.m_right = true;
                 MoveSound.play();
                 walking_sound(); 
             }
@@ -267,7 +255,7 @@
                 clearInterval(soundTimer);
             }
             if (e.key === 'ArrowRight') {
-                player.m_rigth = false;
+                player.m_right = false;
                 keydown_check = false;
                 clearInterval(soundTimer);
             }
@@ -309,10 +297,6 @@
             if (gameRunning) {
                 update();
                 requestAnimationFrame(loop);
-            }else{
-                document.querySelector("#start_menu").style.display = 'flex';                
-                document.querySelector("#start_menu h1").innerHTML
-                 ="POINT : "+Math.floor(PlayTime / 1000);
             }
         }
 
@@ -325,6 +309,8 @@
         function startGame() {  
             fallingObjects.length = 0;
             player.life = 5;
+            player.x = canvas.width/2;
+            player.y = canvas.height/2;
             PlayTime = 0;
             regen_time = 2000;
             startTime = Date.now();  
@@ -334,6 +320,5 @@
             BGmusic.play();
         }
     </script>
-
 </body>
 </html>
