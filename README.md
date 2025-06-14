@@ -20,14 +20,12 @@
             padding: 0;
             background-color: #f4f4f4;
         }
-
         header {
             background-color: #333;
             color: #fff;
             text-align: center;
             padding: 1em;
         }
-
         section {
             max-width: 800px;
             margin: 20px auto;
@@ -36,21 +34,15 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-
         #portfolio {
             text-align: center;
         }
-
-
-
         .gallery {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: space-between;
         }
-
         .project {
             flex: 1 0 calc(33.333% - 20px);
             box-sizing: border-box;
@@ -59,27 +51,22 @@
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out;
         }
-
         .project:hover {
             transform: scale(1.05);
         }
-
         .project img {
             width: 100%;
             height: auto;
             border-radius: 8px 8px 0 0;
         }
-
         .project .info {
             padding: 10px;
         }
-
         @media only screen and (max-width: 768px) {
             .project {
                 flex: 1 0 calc(50% - 20px);
             }
         }
-
         #portfolio_webgame{
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
             margin: 0 auto;
@@ -87,7 +74,6 @@
             position: relative;
             margin-bottom: 200px;
         }
-
         #myCanvas{position: absolute; left: 50%; top:50%;
             transform: translate(-50%, -50%);
         }
@@ -121,10 +107,8 @@
     <section id="about">
         <h2>About Me</h2>
         <div style="display: flex; align-items: center;">
-            
             <img src="contents/img/김나현.png"
             alt="Your Photo" style="max-width: 40%;">
-
             <div style="flex: 1; margin-left: 20px;">
                 <p style="max-width: 100%;">
                     안녕하세요, 제 포트폴리오에 오신 것을 환영합니다. 저의 과는 영상디자인과이지만 고등학교때 잠깐 프로그래밍을 배운적이 있어 재미있게 했습니다.
@@ -133,8 +117,6 @@
             </div>
         </div>
     </section>
-    
-   
     <article id="portfolio_webgame">
         <canvas id="myCanvas" width="600" height="400"></canvas>
         <div id="start_menu">
@@ -145,11 +127,9 @@
     <audio id="bgMusic" src="contents/sound/자연소리.wav" loop></audio>
     <audio id="moveSound" src="contents/sound/발자국.wav"></audio>
     <audio id="destroySound" src="contents/sound/감전.wav"></audio>
-    
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
-        
         const backgroundImage = new Image();        
         const playerImage = new Image();
         const d_object = new Image();
@@ -164,21 +144,16 @@
             m_left: false,
             m_rigth: false 
         };
-        
         var gravity  = 0.4;
         var OnGround = false;
         var startTime;
         var PlayTime = 0;
-
         var BGmusic = document.querySelector("#bgMusic");
         var MoveSound = document.querySelector("#moveSound");
         var DestroySound = document.querySelector("#destroySound");
-
-
         backgroundImage.src = 'contents/img/background_mygame.png';
         playerImage.src = 'contents/img/player.png'; 
         d_object.src = "contents/img/d_object.png"       
-
         backgroundImage.onload = function() {
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
         };       
@@ -186,10 +161,8 @@
             ctx.drawImage(playerImage, player.x, player.y, 
             player.width, player.height);
         };
-
         backgroundImage.onload = draw;
         playerImage.onload = draw;
-
         function draw() {           
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(backgroundImage, 0, 0, 
@@ -200,16 +173,13 @@
              ctx.drawImage(d_object, object.x, 
              object.y, object.width, object.height); 
             });
-
             ctx.fillStyle = 'white';
             ctx.font = '30px Arial';
             ctx.fillText(`TIME: ${Math.floor(PlayTime / 1000)}`, 220, 40);
-
             ctx.fillStyle = 'white';
             ctx.font = '20px Arial';
             ctx.fillText(`LIFE: ${player.life}`, 10, 40);
         }
-
         function update(){
             if(canvas.height < player.y+player.height ){
                 OnGround = true;
@@ -221,17 +191,14 @@
                  player.G_y += gravity;
                  player.y += player.G_y;
             }
-
             if (player.m_left && player.x > 0){
                 player.x -= player.speed;
             }
             if (player.m_rigth && player.x + player.width < canvas.width){
                 player.x += player.speed;
             }
-
             fallingObjects.forEach(object => {
                 object.y += object.vy;
-
                 if(player.x < object.x + object.width &&
                     player.x + player.width > object.x &&
                     player.y < object.y + object.height &&
@@ -244,15 +211,11 @@
                             BGmusic.pause();
                             BGmusic.currentTime = 0;
                         }
-
                 }
             });
-
-            PlayTime = Date.now() - startTime;
-            
+            PlayTime = Date.now() - startTime; 
             draw();
         }  
-
         var keydown_check = false;
         var soundTimer;
         document.addEventListener('keydown', function(e) {
@@ -279,7 +242,6 @@
                 clearInterval(soundTimer);
             }
         });
-
         function walking_sound(){
             if(!keydown_check) {
                 keydown_check = true;
@@ -289,11 +251,9 @@
                 },200);
             }
         }
-
         var fallingObjects = [];
         var gameRunning = true;
         var regen_time = 2000;
-
         function addFallingObject() {
             if (gameRunning) {
                 const object = {
@@ -311,7 +271,6 @@
                 console.log(regen_time);
             }
         }
-        
         function loop(){
             if (gameRunning) {
                 update();
@@ -322,13 +281,11 @@
                  ="POINT : "+Math.floor(PlayTime / 1000);
             }
         }
-
         document.querySelector("#start_menu button").addEventListener
         ("click",function(){
             document.querySelector("#start_menu").style.display = 'none';
             startGame();
         })
-        
         function startGame() {  
             fallingObjects.length = 0;
             player.life = 5;
@@ -341,6 +298,5 @@
             BGmusic.play();
         }
     </script>
-
 </body>
 </html>
